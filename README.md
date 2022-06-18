@@ -6,7 +6,6 @@
 
 ### Rust & Cargo: [Rustup](https://rustup.rs/)
 
-<br />
 
 ## **Executing the benchmark:**
 (The log of each benchmark will be located at the `benchmarking_log` directory. The logic is being used is simple but challenging enough for the frameworks to escape a "Hello World" environment.)
