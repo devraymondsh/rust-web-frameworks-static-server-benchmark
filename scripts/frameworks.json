@@ -1,12 +1,10 @@
 [
-    { "name":"axum" },
-    { "name":"tide" },
-    { "name":"warp" },
-    { "name":"hyper" },
-    { "name":"actix" },
-    { "name":"salvo" },
-    { "name":"gotham" },
-    { "name":"rocket" },
-    { "name":"thruster" },
-    { "name":"tiny-http" }
+  { "name": "actix" },
+  { "name": "axum" },
+  { "name": "gotham" },
+  { "name": "hyper" },
+  { "name": "rocket" },
+  { "name": "salvo" },
+  { "name": "thruster" },
+  { "name": "warp" }
 ]

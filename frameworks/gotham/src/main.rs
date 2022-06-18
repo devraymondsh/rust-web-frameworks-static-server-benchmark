@@ -1,21 +1,45 @@
-//! A Hello World example application for working with Gotham.
-use gotham::state::State;
+use futures_util::future::{self, FutureExt};
+use gotham::{
+    handler::HandlerFuture,
+    helpers::http::response,
+    hyper::StatusCode,
+    prelude::{DefineSingleRoute, DrawRoutes, FromState},
+    router::{builder, response::StaticResponseExtender},
+    state::{State, StateData},
+};
+use logic;
+use serde::Deserialize;
+use std::pin::Pin;
 
-// Use Jemalloc only for musl-64 bits platforms
-#[cfg(all(target_env = "musl", target_pointer_width = "64"))]
-#[global_allocator]
-static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
-
-/// Create a `Handler` which is invoked when responding to a `Request`.
-///
-/// How does a function become a `Handler`?.
-/// We've simply implemented the `Handler` trait, for functions that match the signature used here,
-/// within Gotham itself.
-pub fn index(state: State) -> (State, &'static str) {
-    (state, "Hello World!")
+#[derive(Deserialize, StateData, StaticResponseExtender)]
+struct IndexPathParams {
+    fibo_destination: String,
 }
 
-/// Start a server and call the `Handler` we've defined above for each `Request` we receive.
-pub fn main() {
-    gotham::start("127.0.0.1:9852", || Ok(index)).unwrap()
+fn index(mut state: State) -> Pin<Box<HandlerFuture>> {
+    let IndexPathParams { fibo_destination } = IndexPathParams::take_from(&mut state);
+
+    logic::run_fibo(fibo_destination)
+        .then(|fibo_results| {
+            let body = serde_json::to_string(&fibo_results).unwrap();
+
+            let response =
+                response::create_response(&state, StatusCode::OK, mime::APPLICATION_JSON, body);
+
+            future::ok((state, response))
+        })
+        .boxed()
+}
+
+fn main() {
+    gotham::start(
+        "127.0.0.1:9852",
+        builder::build_simple_router(|route| {
+            route
+                .get("/:fibo_destination")
+                .with_path_extractor::<IndexPathParams>()
+                .to(index);
+        }),
+    )
+    .unwrap()
 }

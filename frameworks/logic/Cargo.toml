@@ -1,0 +1,9 @@
+[package]
+name = "logic"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+async-recursion = "1.0.0"
+serde = { version = "1.0.137", features = ["derive"] }
+tokio = { version = "1.19.2", default-features=false, features = ["io-util", "fs"] }

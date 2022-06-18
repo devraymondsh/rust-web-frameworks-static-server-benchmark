@@ -1,14 +1,15 @@
-use warp::Filter;
+use logic;
+use warp::{reply::json, Filter, Rejection, Reply};
 
-// Use Jemalloc only for musl-64 bits platforms
-#[cfg(all(target_env = "musl", target_pointer_width = "64"))]
-#[global_allocator]
-static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
+pub async fn index(fibo_destination: String) -> Result<impl Reply, Rejection> {
+    let fibo_results = logic::run_fibo(fibo_destination).await;
+
+    Ok(json(&fibo_results))
+}
 
 #[tokio::main]
 async fn main() {
-    // Match any request and return hello world!
-    let routes = warp::any().map(|| "Hello World!");
+    let routes = warp::path!(String).and_then(index);
 
     warp::serve(routes).run(([127, 0, 0, 1], 9852)).await;
 }

@@ -4,8 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tokio = { version = "1.14.0", features = ["full"] }
+tokio = { version = "1.19.2", features = ["rt-multi-thread", "macros"] }
 warp = "0.3.2"
-
-[target.'cfg(all(target_env = "musl", target_pointer_width = "64"))'.dependencies.jemallocator]
-version = "0.3.2"
+logic = { path = "../logic" }

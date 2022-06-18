@@ -1,12 +1,13 @@
+use rocket::{config, serde::json::Json, Config};
 use std::net::Ipv4Addr;
-use rocket::{Config, config};
+use logic;
 
 #[macro_use]
 extern crate rocket;
 
-#[get("/")]
-fn index() -> &'static str {
-    "Hello World!"
+#[get("/<fibo_destination>")]
+async fn index(fibo_destination: String) -> Json<logic::FiboResults> {
+    Json(logic::run_fibo(fibo_destination).await)
 }
 
 #[launch]

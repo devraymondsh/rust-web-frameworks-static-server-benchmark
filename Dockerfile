@@ -1,8 +1,8 @@
-FROM rust:1.57-slim
+FROM rust:1.61.0-slim
 
-RUN apt-get update && apt-get -y upgrade && apt-get install -y openssl wrk build-essential manpages-dev curl jq
+RUN apt-get update && apt-get -y upgrade && apt-get install -y openssl pkg-config libssl-dev wrk build-essential manpages-dev curl jq
 
-WORKDIR rust_web_frameworks_benchmark/
+WORKDIR /rust_web_frameworks_benchmark
 
 RUN mkdir scripts
 

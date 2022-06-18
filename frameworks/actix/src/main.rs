@@ -1,13 +1,9 @@
-use actix_web::{get, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, App, web::{Path, Json}, HttpServer, Responder};
+use logic;
 
-// Use Jemalloc only for musl-64 bits platforms
-#[cfg(all(target_env = "musl", target_pointer_width = "64"))]
-#[global_allocator]
-static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
-
-#[get("/")]
-async fn index() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
+#[get("/{fibo_destination}")]
+async fn index(fibo_destination: Path<String>) -> impl Responder {
+    Json(logic::run_fibo(fibo_destination.to_string()).await)
 }
 
 #[actix_web::main]
