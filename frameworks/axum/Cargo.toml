@@ -1,9 +1,9 @@
 [package]
-name = "axum"
+name = "benchmark"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = "0.5.7"
-tokio = { version = "1.19.2", features = ["rt-multi-thread", "macros"] }
+axum = "0.6.4"
+tokio = { version = "1.25.0", features = ["rt-multi-thread", "macros"] }
 logic = { path = "../logic" }

@@ -7,10 +7,12 @@ echoerr() {
 }
 
 bunchmark() {
+    sleep 3
+
     echo "Benchmarking $1..."
 
     # Running the process in background
-    ./frameworks/"$1"/target/release/"$1" &
+    ./binaries/"$1" &
 
     # Store the running background process id in a local variable
     FRAMEWORK_PID=$!
@@ -41,7 +43,7 @@ bunchmark() {
 
         KILL_ATTEMPT=$((KILL_ATTEMPT + 1))
 
-        if [ $KILL_ATTEMPT -gt 2 ]; then
+        if [ $KILL_ATTEMPT -gt 4 ]; then
             echo "Attempt $KILL_ATTEMPT to kill the $1 framework process (pid: $FRAMEWORK_PID)."
         fi
 
@@ -85,15 +87,26 @@ benchmark_all() {
     loop_through_frameworks bunchmark
 }
 
+gather_binaries() {
+    cp -f ./frameworks/"$1"/target/release/benchmark ./binaries/"$1"
+}
+
 main() {
-    loop_through_frameworks compile
+    if [ "$SCRIPT_ACTION" = "compile" ]; then
+        loop_through_frameworks compile
 
-    # print a break line
-    echo ""
+        mkdir -p binaries
 
-    mkdir -p "/rust_web_frameworks_benchmark/benchmarking_log"
+        loop_through_frameworks gather_binaries
+    fi
 
-    benchmark_all | tee -a "/rust_web_frameworks_benchmark/benchmarking_log/benchmark__$(date +"%y-%m-%d_%H-%M").log"
+    if [ "$SCRIPT_ACTION" = "benchmark" ]; then
+        if [ -d "logs" ]; then
+            benchmark_all | tee -a "logs/benchmark__$(date +"%y-%m-%d_%H-%M").log"
+        else
+            benchmark_all
+        fi
+    fi
 }
 
 main

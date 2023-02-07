@@ -1,4 +1,5 @@
 *.log
 frameworks/**/target
 frameworks/**/Cargo.lock
-benchmarking_log/
+!benchmarking_log/README.md
+benchmarking_log/*

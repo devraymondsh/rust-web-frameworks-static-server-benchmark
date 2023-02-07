@@ -1,23 +1,19 @@
 # Rust web frameworks benchmark
 
 ## **Requirements:**
-
 ### Docker: [Get Docker](https://docs.docker.com/get-docker/)
-
 ### Rust & Cargo: [Rustup](https://rustup.rs/)
 
-
-## **Executing the benchmark:**
-(The log of each benchmark will be located at the `benchmarking_log` directory. The logic is being used is simple but challenging enough for the frameworks to escape a "Hello World" environment.)
-
-### **Macos/Linux**
+## **Running the benchmark:**
+### **Build**
 #### Enter the following command to start:
 ```bash
-bash scripts/run.sh
+docker build -t devraymondsh/rust_web_frameworks_benchmark .
+```
+### **Run**
+#### Enter the following command to start:
+```bash
+docker run -v="$(pwd)/logs:/rust_web_frameworks_benchmark/logs" --rm -it devraymondsh/rust_web_frameworks_benchmark
 ```
 
-### **Windows**
-#### Change your directory to the root directory of this repository and run the following script to start:
-```bash
-scripts/run.bat
-```
+#### You can find the logs in `logs` directory after running the benchmark.

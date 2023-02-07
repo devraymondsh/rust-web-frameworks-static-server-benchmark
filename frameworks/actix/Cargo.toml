@@ -1,8 +1,8 @@
 [package]
-name = "actix"
+name = "benchmark"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4.1.0"
+actix-web = "4.3.0"
 logic = { path = "../logic" }

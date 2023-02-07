@@ -1,12 +1,11 @@
 use logic;
 use salvo::{
-    async_trait,
-    prelude::{fn_handler, Router, Server, TcpListener},
+    prelude::{handler, Router, Server, TcpListener},
     writer::Json,
     Request, Response,
 };
 
-#[fn_handler]
+#[handler]
 async fn index(req: &mut Request, res: &mut Response) {
     let fibo_destination = req.param::<String>("fibo_destination").unwrap();
 

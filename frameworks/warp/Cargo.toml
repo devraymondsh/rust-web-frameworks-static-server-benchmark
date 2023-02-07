@@ -1,9 +1,9 @@
 [package]
-name = "warp"
+name = "benchmark"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-tokio = { version = "1.19.2", features = ["rt-multi-thread", "macros"] }
-warp = "0.3.2"
+tokio = { version = "1.25.0", features = ["rt-multi-thread", "macros"] }
+warp = "0.3.3"
 logic = { path = "../logic" }

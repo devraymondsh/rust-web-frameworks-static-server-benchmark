@@ -1,9 +1,9 @@
 [package]
-name = "salvo"
+name = "benchmark"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-salvo = { version = "0.25.0", features = ["full"] }
-tokio = { version = "1.18.2", features = ["rt-multi-thread", "macros"] }
+salvo = { version = "0.37.9", features = ["full"] }
+tokio = { version = "1.25.0", features = ["rt-multi-thread", "macros"] }
 logic = { path = "../logic" }
