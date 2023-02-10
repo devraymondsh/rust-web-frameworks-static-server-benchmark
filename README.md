@@ -22,10 +22,19 @@
 ```bash
 docker build -t devraymondsh/rust_web_frameworks_benchmark .
 ```
-### **Run**
+### **Run with default settings**
 #### Enter the following command to start:
 ```bash
 docker run -v="$(pwd)/logs:/rust_web_frameworks_benchmark/logs" --rm -it devraymondsh/rust_web_frameworks_benchmark
 ```
 
-#### You can find the logs in `logs` directory after running the benchmark.
+### **Run with custom settings**
+#### Enter the following command to start:
+```bash
+docker run -e="FIBO_TARGET=20" -e="RATE=50000" -e="THREADS=8" -e="CLIENTS=200" -e="DURATION=10" -v="$(pwd)/logs:/rust_web_frameworks_benchmark/logs" --rm -it devraymondsh/rust_web_frameworks_benchmark
+```
+#### Feel free to replace values with your own desire. Keep in mind the DURATION env is in seconds.
+
+<br />
+
+#### NOTE: You can find the logs in `logs` directory after running the benchmark.

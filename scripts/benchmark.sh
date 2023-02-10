@@ -1,7 +1,5 @@
 #!/bin/sh
 
-FIBO_DESTINATION=20
-
 . ./scripts/common.sh
 
 bunchmark() {
@@ -30,7 +28,7 @@ bunchmark() {
     done
 
     # Benchmarking with wrk
-    wrk2 -t4 -c200 -d10s -R50000 "http://localhost:9852/$FIBO_DESTINATION"
+    wrk2 -t"$THREADS" -c"$CLIENTS" -d"$DURATION"s -R"$RATE" "http://localhost:9852/$FIBO_TARGET"
 
     # Kill the background process
     KILL_ATTEMPT=0

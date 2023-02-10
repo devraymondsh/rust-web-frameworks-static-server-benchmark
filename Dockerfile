@@ -1,6 +1,9 @@
 FROM devraymondsh/ubuntu-docker-rust:latest AS build
 
-RUN apt-get update && apt-get -y upgrade && apt-get -y install jq openssl pkg-config libssl-dev
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get -y upgrade
+RUN apt-get -y --no-install-recommends install jq openssl pkg-config libssl-dev
 
 WORKDIR /rust_web_frameworks_benchmark
 
@@ -14,9 +17,12 @@ RUN [ "./scripts/compile.sh" ]
 
 FROM ubuntu:latest AS app
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN echo "deb http://security.ubuntu.com/ubuntu focal-security main" | tee /etc/apt/sources.list.d/focal-security.list
 RUN apt-get update && apt-get -y upgrade
-RUN apt-get -y install openssl pkg-config manpages-dev curl jq libssl1.1
+RUN apt-get -y --no-install-recommends install openssl ca-certificates pkg-config manpages-dev curl jq libssl1.1
+RUN update-ca-certificates
 
 RUN curl -L -O https://github.com/hnakamur/wrk2-deb/releases/download/debian%2F0.20190924.git44a94c1-1ppa1_bionic/wrk2_0.20190924.git44a94c1-1ppa1.bionic_amd64.deb
 RUN chmod +x *.deb && dpkg -i *.deb
@@ -31,4 +37,10 @@ COPY scripts/common.sh /rust_web_frameworks_benchmark/scripts/common.sh
 COPY scripts/benchmark.sh /rust_web_frameworks_benchmark/scripts/benchmark.sh
 
 RUN chmod +x scripts/*.sh
+
+ENV THREADS=8
+ENV RATE=50000
+ENV DURATION=10
+ENV CLIENTS=200
+ENV FIBO_TARGET=20
 ENTRYPOINT [ "./scripts/benchmark.sh" ]
