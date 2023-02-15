@@ -7,6 +7,7 @@ RUN apt-get -y --no-install-recommends install jq openssl pkg-config libssl-dev
 
 WORKDIR /rust_web_frameworks_benchmark
 
+COPY static /rust_web_frameworks_benchmark/static
 COPY frameworks /rust_web_frameworks_benchmark/frameworks
 COPY scripts/frameworks.json /rust_web_frameworks_benchmark/scripts/frameworks.json
 COPY scripts/common.sh /rust_web_frameworks_benchmark/scripts/common.sh
@@ -42,5 +43,5 @@ ENV THREADS=8
 ENV RATE=50000
 ENV DURATION=10
 ENV CLIENTS=200
-ENV FIBO_TARGET=20
+ENV FILENAME="index.html"
 ENTRYPOINT [ "./scripts/benchmark.sh" ]

@@ -16,19 +16,19 @@ bunchmark() {
     # Wait for the framework to start up
     WRK_WAITING_ATTEMPT=1
     # shellcheck disable=SC1083
-    while [ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:9852/1)" != "200" ]; do
+    while [ "$(curl -s -o /dev/null -w ''%{http_code}'' localhost:9852/index.html)" != "200" ]; do
         sleep 1
 
         WRK_WAITING_ATTEMPT=$((WRK_WAITING_ATTEMPT + 1))
 
-        if [ $WRK_WAITING_ATTEMPT -gt 60 ]; then
+        if [ $WRK_WAITING_ATTEMPT -gt 120 ]; then
             echoerr "The framework faild to start up at localhost:9852. Startup waiting limit reached."
             break
         fi
     done
 
     # Benchmarking with wrk
-    wrk2 -t"$THREADS" -c"$CLIENTS" -d"$DURATION"s -R"$RATE" "http://localhost:9852/$FIBO_TARGET"
+    wrk2 -t"$THREADS" -c"$CLIENTS" -d"$DURATION"s -R"$RATE" "http://localhost:9852/$FILENAME"
 
     # Kill the background process
     KILL_ATTEMPT=0
@@ -43,7 +43,7 @@ bunchmark() {
             echo "Attempt $KILL_ATTEMPT to kill the $1 framework process (pid: $FRAMEWORK_PID)."
         fi
 
-        if [ $WRK_WAITING_ATTEMPT -gt 60 ]; then
+        if [ $WRK_WAITING_ATTEMPT -gt 120 ]; then
             echoerr "The attempts faild to kill the process $FRAMEWORK_PID. Killing attempt limit reached."
             break
         fi

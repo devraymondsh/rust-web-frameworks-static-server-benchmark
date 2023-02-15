@@ -3,20 +3,40 @@ use hyper::{
     service::{make_service_fn, service_fn},
     Body, Request, Response, Server,
 };
-use logic;
-use std::{convert::Infallible, str::FromStr};
+use std::{convert::Infallible, str::FromStr, path::Path, ffi::OsStr};
+
+use include_dir::{include_dir, Dir};
+static PROJECT_DIR: Dir = include_dir!("../../static");
 
 async fn index(mut req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    let fibo_destination = req.uri_mut().path().replace("/", "");
+    let path = req.uri_mut().path().replace("/", "");
 
-    let fibo_results = logic::run_fibo(fibo_destination).await;
+    let mut mime = String::from("text/html");
+    let body = match PROJECT_DIR.get_file(&path) {
+        Some(contents) => {
+            let content_type = match Path::new(&path).extension().and_then(OsStr::to_str) {
+                Some(ext) => mime_guess::from_ext(ext).first_or_text_plain().to_string(),
+                None => String::from("text/plain"),
+            };
 
-    let body = serde_json::to_string(&fibo_results).unwrap();
+            match contents.contents_utf8() {
+                Some(contents) => {
+                    mime = content_type;
 
+                    String::from(contents)
+                },
+                None => String::from("Failed to get the contents as UTF-8!"),
+            }
+        },
+        None => {
+            String::from("File not found!")
+        }
+    };
+    
     let mut res = Response::new(Body::from(body));
     res.headers_mut().append(
         HeaderName::from_str("Content-Type").unwrap(),
-        HeaderValue::from_str("application/json").unwrap(),
+        HeaderValue::from_str(mime.as_str()).unwrap(),
     );
 
     Ok(res)

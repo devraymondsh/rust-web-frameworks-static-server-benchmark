@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+include_dir = "0.7.3"
+mime = "0.3.16"
+mime_guess = "2.0.4"
 salvo = { version = "0.37.9", features = ["full"] }
 tokio = { version = "1.25.0", features = ["rt-multi-thread", "macros"] }
-logic = { path = "../logic" }
